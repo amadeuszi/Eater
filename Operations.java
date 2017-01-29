@@ -10,14 +10,14 @@ import java.sql.ResultSet;
 public class Operations {
 	private String host = "jdbc:mysql://sql11.freemysqlhosting.net/sql11155281";
 	private String username = "sql11155281";
-	private String password = "TMQYFgLtBp";
+	private String p = "TMQYFgLtBp";
 	private Connection con = null;
 	public User user = null;
 	
 	public Operations() {
 		user = new User();
 		try {
-			con = DriverManager.getConnection(host , username, password);
+			con = DriverManager.getConnection(host , username, p);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

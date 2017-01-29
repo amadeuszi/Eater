@@ -35,16 +35,20 @@ public class User {
 	}
 	
 	void showShoppingList() {
-		System.out.println("Shopping list: ");
+		System.out.println("\nIngredients to buy: ");
 		for (Integer key : shoppingList.keySet()) {
 			System.out.println("What: " + key + ", How much: "  + shoppingList.get(key));
 		}
 	}
 	
 	void showProductList() {
-		System.out.println("Product List: ");
+		System.out.println("\nProduct List: ");
+		double sum = 0;
 		for (Product product : productList) {
 			System.out.println(product);
+			sum += product.priceAll;
 		}
+		System.out.println("\n---------------------------\n" +
+					"Price for all the products: " + sum);
 	}
 }
