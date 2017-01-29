@@ -156,20 +156,7 @@ public class Operations {
 		}
 	}
 	
-	boolean validateLists(ArrayList<Integer> ingredients, ArrayList<Integer> quantities) {
-		boolean isOk = true;
-		isOk = ingredients.size() == quantities.size();
-		if (ingredients.size() > 0) {
-			int max = ingredients.get(0);
-			for (Integer i : ingredients) {
-				max = Math.max(i, max);
-			}
-			isOk = isOk && max < autoIncrementValue("INGREDIENT");
-		}
-		return isOk;
-	}
-	
-	void addRecipie(String title, String description, ArrayList<Integer> ingredients, ArrayList<Integer> quantities) {
+	void addRecipie(String title, String description, ArrayList<Integer> ingredients, ArrayList<Double> quantities) {
 		try {
 			int recipie = autoIncrementValue("RECIPIE");
 			Statement stmt = con.createStatement();

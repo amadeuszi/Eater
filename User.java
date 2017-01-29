@@ -25,7 +25,10 @@ public class User {
 		shoppingList = new HashMap<Integer, Double>();
 		for (Integer key : neededIngredients.keySet()) {
 			Double howMuch = myShelf.getOrDefault(key, 0.0);
-			shoppingList.put(key, Math.max(0.0, neededIngredients.get(key) - howMuch));
+			Double needed = neededIngredients.get(key);
+			if (howMuch < needed) {
+				shoppingList.put(key, needed - howMuch);
+			}
 		}
 	}
 	

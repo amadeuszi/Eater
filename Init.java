@@ -90,6 +90,8 @@ public class Init {
 			stmt.executeUpdate(sql);
 			sql = "INSERT INTO PRICES VALUES(3, 6.29, 250.0)";
 			stmt.executeUpdate(sql);
+			sql = "INSERT INTO PRICES VALUES(4, 0.50, 1.0)";
+			stmt.executeUpdate(sql);
 			sql = "INSERT INTO MY_SHELF VALUES(1, 1.0)";
 			stmt.executeUpdate(sql);
 			sql = "INSERT INTO MY_SHELF VALUES(3, 100.0) ";
