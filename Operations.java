@@ -156,15 +156,16 @@ public class Operations {
 		}
 	}
 	
-	void addRecipie(String title, String description, ArrayList<Integer> ingredients, ArrayList<Double> quantities) {
+	void addRecipie(String title, String description, ArrayList<String> ingredients, ArrayList<Double> quantities) {
 		try {
+			ArrayList<Integer> ingr = translate(ingredients);
 			int recipie = autoIncrementValue("RECIPIE");
 			Statement stmt = con.createStatement();
 			String sql = "INSERT INTO RECIPIE(title, description) VALUES('" + 
 						title + "', '" + description + "')";
 			stmt.executeUpdate(sql);
-			for (int i = 0; i < ingredients.size(); i++) {
-				addRecipieIngredient(recipie, ingredients.get(i), quantities.get(i));
+			for (int i = 0; i < ingr.size(); i++) {
+				addRecipieIngredient(recipie, ingr.get(i), quantities.get(i));
 			}
 		} catch(SQLException e) {
 			e.printStackTrace();
@@ -181,4 +182,93 @@ public class Operations {
 			e.printStackTrace();
 		}
 	}
+	
+	void addIngredient(String title, String kind, double price, double quantity) {
+		try {
+			
+			Statement stmt = con.createStatement();
+			int ingredient = autoIncrementValue("INGREDIENT");
+			String sql = "INSERT INTO INGREDIENT(title, kind_of_quantity) VALUES('"
+					+ title + "', '" + kind + "')";
+			stmt.executeUpdate(sql);
+			sql = "INSERT INTO PRICES VALUES(" + ingredient + ", " + price + ", " + quantity + ")"; 
+			stmt.executeUpdate(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	void updateTranslator() {
+		try {
+			
+			user.translatorIngredient = new HashMap<String, Integer>();
+			Statement stmt = con.createStatement();
+			String sql = "SELECT * FROM INGREDIENT";
+			ResultSet res = stmt.executeQuery(sql);
+			while (res.next()) {
+				String name = res.getString("title");
+				int id = res.getInt("id");
+				user.translatorIngredient.put(name, id);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	ArrayList<Integer> translate(ArrayList<String> input) {
+		ArrayList<Integer> result = new ArrayList<>();
+		for (String in : input) {
+			result.add(user.translatorIngredient.get(in));
+		}
+		return result;
+	}
+	
+	void addToMyShelf(String name, double quantity) {
+		int id = user.translatorIngredient.get(name);
+		try {
+			
+			Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+	                   ResultSet.CONCUR_UPDATABLE);
+			String sql = "SELECT * FROM MY_SHELF WHERE id_ingredient = " + id;
+			ResultSet result = stmt.executeQuery(sql);
+			double howMuch = 0;
+			if (result.next()) {
+				howMuch = result.getDouble("quantity");
+				result.updateFloat("quantity", (float) (howMuch + quantity));
+				result.updateRow();
+			}
+			else {
+				Statement stmt2 = con.createStatement();
+				sql = "INSERT INTO MY_SHELF VALUES(" + id + ", " + quantity + ")";
+				stmt2.executeUpdate(sql);
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	void deleteFromMyShelf(String name, double quantity) {
+		int id = user.translatorIngredient.get(name);
+		try {
+			
+			Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+	                   ResultSet.CONCUR_UPDATABLE);
+			String sql = "SELECT * FROM MY_SHELF WHERE id_ingredient = " + id;
+			ResultSet result = stmt.executeQuery(sql);
+			double howMuch = 0;
+			if (result.next()) {
+				howMuch = result.getDouble("quantity");
+				result.updateFloat("quantity", (float) Math.max(howMuch - quantity, 0.0));
+				result.updateRow();
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

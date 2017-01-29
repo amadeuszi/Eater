@@ -7,6 +7,8 @@ public class User {
 	public Map<Integer, Double> neededIngredients;
 	public Map<Integer, Double> myShelf;
 	public ArrayList<Product> productList;
+	public Map<String, Integer> translatorIngredient;
+	
 	User() {
 		chosenRecipies = new ArrayList<Integer>();
 		shoppingList = new HashMap<Integer, Double>();
